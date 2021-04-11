@@ -8,7 +8,8 @@ do.anova = function(df){
   p.value = NaN
   r.squared = NaN
   adj.r.squared = NaN
-  aLm = try(lm(.y ~ .group.colors, data=df), silent = TRUE)
+  aLm = try(lm(.y ~ .group.colors1 + .group.colors2, data=df), silent = TRUE)
+  
   if(!inherits(aLm, 'try-error')) {
     p.value = (anova(aLm)$'Pr(>F)')[[1]]
     sm <- summary(aLm)
@@ -33,8 +34,10 @@ if (length(ctx$colors) < 1) stop("A color factor is required.")
 
 ctx %>% 
   select(.ci, .ri, .y) %>%
-  mutate(.group.colors = do.call(function(...) paste(..., sep='.'), ctx$select(ctx$colors))) %>%
+  mutate(.group.colors1 = do.call(function(...) paste(..., sep='.'), ctx$select(ctx$colors[[1]]))) %>%
+  mutate(.group.colors2 = do.call(function(...) paste(..., sep='.'), ctx$select(ctx$colors[[2]]))) %>%
   group_by(.ci, .ri) %>%
   do(do.anova(.)) %>%
   ctx$addNamespace() %>%
   ctx$save()
+
