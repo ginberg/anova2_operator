@@ -17,11 +17,12 @@ Output relations|.
 
 ##### Details
 
-`anova` operator performs an analysis of variance of the data. The operator is based on the [anova R function](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/anova).
+`anova2` operator performs an analysis of variance of the data. The operator is based on the [anova R function](https://www.rdocumentation.org/packages/stats/versions/3.6.2/topics/anova).
 
 ##### References
 
 See [Analysis of variance on Wikipedia](https://en.wikipedia.org/wiki/Analysis_of_variance).
+See [Two way anova in R](http://www.sthda.com/english/wiki/two-way-anova-test-in-r)
 
 ##### See Also
 
