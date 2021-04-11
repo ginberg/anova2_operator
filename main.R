@@ -1,15 +1,15 @@
 library(tercen)
 library(dplyr)
 
-do.anova = function(df){
+do.anova = function(df, interact = FALSE){
   f.stat = NaN
   numdf = NaN
   dendf = NaN
   p.value = NaN
   r.squared = NaN
   adj.r.squared = NaN
-  aLm = try(lm(.y ~ .group.colors1 + .group.colors2, data=df), silent = TRUE)
-  
+  formula = ifelse(interact, ".y ~ .group.colors1 * .group.colors2", ".y ~ .group.colors1 + .group.colors2")
+  aLm = try(lm(formula, data=df), silent = TRUE)
   if(!inherits(aLm, 'try-error')) {
     p.value = (anova(aLm)$'Pr(>F)')[[1]]
     sm <- summary(aLm)
@@ -32,12 +32,15 @@ ctx = tercenCtx()
 
 if (length(ctx$colors) < 1) stop("A color factor is required.")
 
+Interaction = ifelse(is.null(ctx$op.value('Interaction')), FALSE, as.logical(ctx$op.value('Interaction')))
+
 ctx %>% 
   select(.ci, .ri, .y) %>%
   mutate(.group.colors1 = do.call(function(...) paste(..., sep='.'), ctx$select(ctx$colors[[1]]))) %>%
   mutate(.group.colors2 = do.call(function(...) paste(..., sep='.'), ctx$select(ctx$colors[[2]]))) %>%
   group_by(.ci, .ri) %>%
-  do(do.anova(.)) %>%
+  do(do.anova(., Interaction)) %>%
   ctx$addNamespace() %>%
   ctx$save()
+
 
