@@ -10,7 +10,7 @@
     "name": "Interaction",
     "defaultValue": false,
     "description": "Set to TRUE if you think the coloring variables might interact to create an synergistic effect on the ouput variable."
-  }
+  } ]
 }
 
 
