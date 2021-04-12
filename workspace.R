@@ -18,21 +18,23 @@ do.anova = function(df, interact = FALSE){
   formula = ifelse(interact, ".y ~ .group.colors1 * .group.colors2", ".y ~ .group.colors1 + .group.colors2")
   aLm = try(lm(formula, data=df), silent = TRUE)
   if(!inherits(aLm, 'try-error')) {
-    p.value = (anova(aLm)$'Pr(>F)')[[1]]
-    sm <- summary(aLm)
-    f.stat <- sm$fstatistic[1]
-    numdf <- sm$fstatistic[2]
-    dendf <- sm$fstatistic[3]
-    r.squared <- sm$r.squared
-    adj.r.squared <- sm$adj.r.squared
+    anova    = anova(aLm) %>% 
+      rownames_to_column('rows') %>% 
+      filter(grepl(".group.colors", rows)) %>% 
+      select(-rows)
+    Df       = anova$Df
+    sum.sq   = anova$'Sum Sq'
+    mean.sq  = anova$'Mean Sq'
+    f.values = anova$'F value'
+    p.values = anova$'Pr(>F)'
   } 
-  return (data.frame(.ri = df$.ri[1], .ci = df$.ci[1],
-                     f.stat = c(f.stat),
-                     numdf = c(numdf),
-                     dendf = c(dendf),
-                     p.value = c(p.value),
-                     r.squared = c(r.squared),
-                     adj.r.squared = c(adj.r.squared)))
+  return (data.frame(.ri     = df$.ri[1], 
+                     .ci     = df$.ci[1],
+                     Df      = Df,
+                     sum.sq  = sum.sq,
+                     mean.sq = mean.sq,
+                     f.value = f.values,
+                     p.value = p.values))
 }
 
 ctx = tercenCtx()
