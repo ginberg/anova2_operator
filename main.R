@@ -1,5 +1,6 @@
 library(tercen)
 library(dplyr)
+library(tibble)
 
 do.anova = function(df, interact = FALSE){
   f.stat = NaN

@@ -1,5 +1,6 @@
 library(tercen)
 library(dplyr)
+library(tibble)
 
 # Set appropriate options
 # options("tercen.serviceUri"="http://tercen:5400/api/v1/")
